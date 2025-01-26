@@ -31,6 +31,11 @@ yolov10n.pt |  yolo pytorch model
 -- batch-size | 1 for no batch
 -- live-source | 1 for true
 
+# Dependent
+URL | Purpose
+--- | ---
+https://github.com/shashikant-ghangare/DeepStream-Yolo/tree/add-yolov10 | git clone -b add-yolov10 https://github.com/shashikant-ghangare/DeepStream-Yolo.git to get the yolov10 support for deepstream (config and custom lib source)
+
 # pipelines
 Attempt | Pipeline | function | CPU% , GPU%
 --- | --- | --- | --- 
