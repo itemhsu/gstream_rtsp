@@ -21,6 +21,8 @@ Name | Purpose
 run-yolov10.sh | run gst-launch pipeline
 export_yoloV10.py | "python export_yoloV10.py -w yolov10n.pt" to generate onnx from yolo pytorch model
 config_infer_primary_yolov10.txt | config the deepstream 
+MakeFile | patch for DeepStream-Yolo/nvdsinfer_custom_impl_Yolo
+upsample_layer.cpp | patch for DeepStream-Yolo/nvdsinfer_custom_impl_Yolo/layers/upsample_layer.cpp
 yolov10n.pt |  yolo pytorch model
 -- onnx-file | define model onnx file
 -- model-engine-file | define TensorRT model file (will auto generate from onnx if file doesn't exist)
@@ -38,11 +40,14 @@ https://github.com/shashikant-ghangare/DeepStream-Yolo/tree/add-yolov10 | git cl
 
 # Steps
 1. Install Ubuntu, GPU driver, CUDA, TensorRT, PyTorch, GStreamer, DeepStream SDK
-2. Install RTSP Camera
-3. build custom lib with https://github.com/shashikant-ghangare/DeepStream-Yolo/tree/add-yolov10
-4. get onnx model with export_yoloV10.py
-5. edit config_infer_primary_yolov10 to fit your enviroment
-6. run run-yolov10.sh
+1. Install RTSP Camera
+1. build custom lib with https://github.com/shashikant-ghangare/DeepStream-Yolo/tree/add-yolov10
+   * patch DeepStream-Yolo/nvdsinfer_custom_impl_Yolo/Makefile
+   * patch DeepStream-Yolo/nvdsinfer_custom_impl_Yolo/layers/upsample_layer.cpp
+   * make
+1. get onnx model with export_yoloV10.py
+1. edit config_infer_primary_yolov10 to fit your enviroment
+1. run run-yolov10.sh
 
 # pipelines
 Attempt | Pipeline | function | CPU% , GPU%
