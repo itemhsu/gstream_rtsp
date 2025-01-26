@@ -49,7 +49,7 @@ https://github.com/shashikant-ghangare/DeepStream-Yolo/tree/add-yolov10 | git cl
 1. edit config_infer_primary_yolov10 to fit your enviroment
 1. run run-yolov10.sh
 
-# pipelines
+# Testing pipelines
 Attempt | Pipeline | function | CPU% , GPU%
 --- | --- | --- | --- 
 1 | ffplay rtsp://168.168.11.23/media.amp?streamprofile=Profile3 | ffplay as rtsp base line | 14.5%
