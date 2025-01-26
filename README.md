@@ -17,7 +17,7 @@ DeepStream | 7.1 | --
 
 # Files
 Name | Purpose
---- | --- | ---
+--- | ---
 run-yolov10.sh | run gst-launch pipeline
 config_infer_primary_yolov10.txt | config the deepstream 
 -- onnx-file | define model onnx file
