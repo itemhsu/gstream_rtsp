@@ -36,6 +36,14 @@ URL | Purpose
 --- | ---
 https://github.com/shashikant-ghangare/DeepStream-Yolo/tree/add-yolov10 | git clone -b add-yolov10 https://github.com/shashikant-ghangare/DeepStream-Yolo.git to get the yolov10 support for deepstream (config and custom lib source)
 
+# Steps
+1. Install Ubuntu, GPU driver, CUDA, TensorRT, PyTorch, GStreamer, DeepStream SDK
+2. Install RTSP Camera
+3. build custom lib with https://github.com/shashikant-ghangare/DeepStream-Yolo/tree/add-yolov10
+4. get onnx model with export_yoloV10.py
+5. edit config_infer_primary_yolov10 to fit your enviroment
+6. run run-yolov10.sh
+
 # pipelines
 Attempt | Pipeline | function | CPU% , GPU%
 --- | --- | --- | --- 
