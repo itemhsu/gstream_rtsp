@@ -21,9 +21,13 @@ Name | Purpose
 run-yolov10.sh | run gst-launch pipeline
 config_infer_primary_yolov10.txt | config the deepstream 
 -- onnx-file | define model onnx file
--- model-engine-file | define TensorRT model file
+-- model-engine-file | define TensorRT model file (will auto generate from onnx if file doesn't exist)
 -- custom-lib-path | define post processor lib
 -- parse-bbox-func-name | post processing function in custom-lib
+-- width | rtsp width
+-- height | resp height
+-- batch-size | 1 for no batch
+-- live-source | 1 for true
 
 # pipelines
 Attempt | Pipeline | function | CPU% , GPU%
