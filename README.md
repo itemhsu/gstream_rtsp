@@ -21,6 +21,7 @@ Name | Purpose
 run-yolov10.sh | run gst-launch pipeline
 export_yoloV10.py | "python export_yoloV10.py -w yolov10n.pt" to generate onnx from yolo pytorch model
 config_infer_primary_yolov10.txt | config the deepstream 
+yolov10n.pt |  yolo pytorch model
 -- onnx-file | define model onnx file
 -- model-engine-file | define TensorRT model file (will auto generate from onnx if file doesn't exist)
 -- custom-lib-path | define post processor lib
