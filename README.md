@@ -1,11 +1,18 @@
 # gstream_rtsp
 Test gstreamer pipeline for rtsp with Nvidia GPU
 
-# Platform
+# Summary
 Item | Note | Usage for 8 RTSP streams
 --- | --- | ---
 CPU | Threads: 12, Model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz | 26%
 GPU | Model: NVIDIA GeForce RTX 3060, 12G | 67%, 96W/170W, 2739MB/12288MB
+RTSP | 640x360, 30FPS | --
+Object detection | Yolov10 | n
+OS | Ubuntu 22.04.5 LTS | --
+CUDA | Cuda compilation tools, release 12.6, V12.6.77 | --
+TensorRT | 10.6.0 | --
+
+
 
 # pipelines
 Attempt | Pipeline | function | CPU% , GPU%
