@@ -13,6 +13,7 @@ CUDA | Cuda compilation tools, release 12.6, V12.6.77 | --
 TensorRT | 10.6.0 | --
 PyTorch | 2.0.1 | --
 GStreamer | 1.20.3 | --
+DeepStream | 7.1 | --
 
 
 
