@@ -4,7 +4,7 @@ Test gstreamer pipeline for rtsp with Nvidia GPU
 # Platform
 Item | Note | Usage for 8 RTSP streams
 --- | --- | ---
-CPU | Core: 12, Model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz | 26%
+CPU | Threads: 12, Model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz | 26%
 GPU | Model: NVIDIA GeForce RTX 3060, 12G | 67%, 96W/170W, 2739MB/12288MB
 
 # pipelines
