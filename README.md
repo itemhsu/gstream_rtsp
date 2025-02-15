@@ -4,7 +4,7 @@ Test gstreamer pipeline for rtsp with Nvidia GPU
 # Summary
 Item | Note | Yolov10 w/ 8 RTSP | D-FINE w/ 8 RTSP
 --- | --- | --- | ---
-CPU | Threads: 12, Model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz | 26% | 41%
+CPU | Threads: 12, Model: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz | 26% | 21%
 GPU | Model: NVIDIA GeForce RTX 3060, 12G | 67%, 96W/170W, 2739MB/12288MB | 56%, 81W/170W, 2739MiB/12288MiB
 RTSP | 8ch, 640x360, 30FPS | -- | --
 Object detection | Yolov10 | D-FINE
