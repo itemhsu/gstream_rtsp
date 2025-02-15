@@ -1,5 +1,5 @@
 # gstream_rtsp
-Test gstreamer pipeline for rtsp with Nvidia GPU
+Test gstreamer pipeline for rtsp with Nvidia GPU, and yolov10 d-fine
 
 # Summary
 Item | Note | Yolov10 w/ 8 RTSP | D-FINE w/ 8 RTSP
