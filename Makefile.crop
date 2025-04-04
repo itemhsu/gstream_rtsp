@@ -3,10 +3,13 @@ CXX       = g++
 CXXFLAGS  = -Wall -Wno-unused-function $(shell pkg-config --cflags gstreamer-1.0 glib-2.0)  -I$(DEEPSTREAM_INC)
 LDFLAGS   = $(shell pkg-config --libs gstreamer-1.0 glib-2.0 )  -L/opt/nvidia/deepstream/deepstream-7.1/lib/ -lnvds_meta -lnvdsgst_meta -lopencv_core -lopencv_imgcodecs
 TARGET_crop    =  yolov10_crop
+TARGET_rtsp_crop    =  yolov10_rtsp_crop
 
-all: $(TARGET_crop)
+all: $(TARGET_crop) $(TARGET_rtsp_crop)
 
 $(TARGET_crop): yolov10_crop.cpp
 	$(CXX) $(CXXFLAGS) -o $(TARGET_crop) yolov10_crop.cpp $(LDFLAGS)
+$(TARGET_rtsp_crop): yolov10_rtsp_crop.cpp
+	$(CXX) $(CXXFLAGS) -o $(TARGET_rtsp_crop) yolov10_rtsp_crop.cpp $(LDFLAGS)
 clean:
-	rm -f $(TARGET_crop)
+	rm -f $(TARGET_crop) $(TARGET_rtsp_crop)

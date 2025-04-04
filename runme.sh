@@ -19,6 +19,10 @@ python sub_deepstream_test_2.py 2165-155327596_tiny.h264
 source ./.bashrc
 ./rgb_crop_parse_clean_trackNo_1_noSgie2_sub_deepstream_test_2 2165-155327596_tiny.h264
 
+#C++ crop rtsp
+./yolov10_rtsp_crop "rtsp://168.168.11.23/media.amp?streamprofile=Profile1"
+
+
 
 # yolo rtsp 
 python3 yolo_deepstream_test_3.py -i "rtsp://168.168.11.23/media.amp?streamprofile=Profile3"
