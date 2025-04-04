@@ -32,6 +32,9 @@ yolov10n.pt |  yolo pytorch model
 -- height | resp height
 -- batch-size | 1 for no batch
 -- live-source | 1 for true
+yolov10_crop.cpp | use yolov10 and cropping the detected object with c++
+Makefile.crop | make file for yolov10_crop.cpp
+runme.sh | example commands for crop and rtsp
 
 # Dependent
 URL | Purpose
