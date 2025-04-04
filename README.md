@@ -62,3 +62,21 @@ Attempt | Pipeline | function | CPU% , GPU%
 5 | gst-launch-1.0     rtspsrc location="rtsp://168.168.11.23/media.amp?streamprofile=Profile3"             protocols=tcp latency=0 name=src          src. ! queue               ! application/x-rtp,media=video,encoding-name=H264,payload=98               ! rtph264depay               ! h264parse               ! nvv4l2decoder               ! nvvideoconvert               ! "video/x-raw(memory:NVMM), format=NV12"               ! mux.sink_0          src. ! queue               ! application/x-rtp,media=audio               ! fakesink     nvstreammux name=mux batch-size=1 width=640 height=360 live-source=1    ! nvinfer config-file-path=config_infer_primary.txt     ! nvvideoconvert     ! nvdsosd     ! nveglglessink | use nvv4l2decoder (hw 264 decoder) nvidia inference and live stream | CPU 14.3%, GPU 3%
 6 | gst-launch-1.0   rtspsrc location="rtsp://168.168.11.23/media.amp?streamprofile=Profile1" protocols=tcp latency=0 name=src     src. ! queue          ! application/x-rtp,media=video,encoding-name=H264,payload=98          ! rtph264depay          ! h264parse          ! nvv4l2decoder          ! nvvideoconvert          ! "video/x-raw(memory:NVMM), format=NV12, width=640, height=360"          ! mux.sink_0     src. ! queue          ! application/x-rtp,media=audio          ! fakesink   nvstreammux name=mux batch-size=1 width=640 height=360 live-source=1   ! nvinfer config-file-path=config_infer_primary.txt   ! nvvideoconvert   ! nvdsosd   ! nveglglessink | input 1920x640 , gpu infer | CPU 20%, GPU 3% |
 7 | gst-launch-1.0 rtspsrc location="rtsp://168.168.11.23/media.amp?streamprofile=Profile1" protocols=tcp latency=0 name=src src. ! queue ! application/x-rtp,media=video,encoding-name=H264,payload=98 ! rtph264depay ! h264parse ! nvv4l2decoder ! nvvideoconvert ! "video/x-raw(memory:NVMM), format=NV12" ! mux.sink_0 src. ! queue ! application/x-rtp,media=audio ! fakesink nvstreammux name=mux batch-size=1 width=640 height=360 live-source=1 ! nvinfer config-file-path=config_infer_primary.txt ! nvvideoconvert ! nvdsosd ! nveglglessink | remove scaled down before nvinfer | CPU 20%, GPU3% |
+
+# Cropping pipelines
+Node | Purpose
+--- | ---
+nvstreammux name=mux batch-size=1 width=1920 height=1080 batched-push-timeout=%d ! | mux 子branch
+nvinfer config-file-path=dstest2_pgie_config.txt ! | inference 點，吃config_infer_primary_yoloV10 參數
+queue ! | 重要，不然會出錯
+nvvideoconvert name=rgb_conv ! video/x-raw,format=BGR ! | 先把YUV轉BGR 才能存jpg檔
+nvvideoconvert name=rgb_conv2 ! | 轉回YUV，不用指定，自動辨認
+nvdsosd name=osd ! | 虛擬顯示畫面
+nveglglessink ; | 顯示硬體
+filesrc location=%s ! | 主要的branch
+h264parse ! | 264 通訊翻譯
+nvv4l2decoder ! | 264 解壓縮 
+queue ! mux.sink_0 | 連接到子branch
+
+
+
