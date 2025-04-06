@@ -281,6 +281,64 @@ NvDsInferParseCustomYolo(std::vector<NvDsInferLayerInfo> const& outputLayersInfo
   return true;
 }
 
+
+
+static bool
+NvDsInferParseCustomYoloLPD(std::vector<NvDsInferLayerInfo> const &outputLayersInfo,
+                            NvDsInferNetworkInfo const &networkInfo,
+                            NvDsInferParseDetectionParams const &detectionParams,
+                            std::vector<NvDsInferParseObjectInfo> &objectList)
+{
+    if (outputLayersInfo.empty()) {
+        std::cerr << "[ERROR] Could not find output layer in bbox parsing" << std::endl;
+        return false;
+    }
+
+    // We assume that the output tensor is stored in outputLayersInfo[0].
+    const NvDsInferLayerInfo &layer = outputLayersInfo[0];
+    const uint totalElements = layer.inferDims.d[0];
+
+    // Check that the total number of elements is a multiple of 6.
+    if (totalElements % 6 != 0) {
+        std::cerr << "[ERROR] Output element count (" << totalElements 
+                  << ") is not a multiple of 6" << std::endl;
+        return false;
+    }
+    const uint outputSize = totalElements / 6;
+
+    // Prepare temporary buffers for boxes, scores, and classes.
+    std::vector<float> boxesBuffer;
+    boxesBuffer.reserve(outputSize * 4);
+    std::vector<float> scoresBuffer;
+    scoresBuffer.reserve(outputSize);
+    std::vector<float> classesBuffer;
+    classesBuffer.reserve(outputSize);
+
+    const float *data = reinterpret_cast<const float *>(layer.buffer);
+    for (uint i = 0; i < outputSize; ++i) {
+        uint base = i * 6;
+        // Extract box coordinates (indices: base+0, base+1, base+2, base+3)
+        boxesBuffer.push_back(data[base + 0]);  // x1
+        boxesBuffer.push_back(data[base + 1]);  // y1
+        boxesBuffer.push_back(data[base + 2]);  // x2
+        boxesBuffer.push_back(data[base + 3]);  // y2
+
+        // Extract score (index: base+4) and class (index: base+5)
+        scoresBuffer.push_back(data[base + 4]);
+        classesBuffer.push_back(data[base + 5]);
+    }
+
+    // Call the decoder to parse objects from the unpacked buffers.
+    std::vector<NvDsInferParseObjectInfo> outObjs = decodeTensorYoloE(
+        boxesBuffer.data(), scoresBuffer.data(), classesBuffer.data(),
+        outputSize, networkInfo.width, networkInfo.height,
+        detectionParams.perClassPreclusterThreshold);
+
+    objectList = outObjs;
+    return true;
+}
+
+
 static bool
 NvDsInferParseCustomYoloE(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvDsInferNetworkInfo const& networkInfo,
     NvDsInferParseDetectionParams const& detectionParams, std::vector<NvDsInferParseObjectInfo>& objectList)
@@ -321,6 +379,13 @@ NvDsInferParseYoloE(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvD
     NvDsInferParseDetectionParams const& detectionParams, std::vector<NvDsInferParseObjectInfo>& objectList)
 {
   return NvDsInferParseCustomYoloE(outputLayersInfo, networkInfo, detectionParams, objectList);
+}
+
+extern "C" bool
+NvDsInferParseYoloLPD(std::vector<NvDsInferLayerInfo> const& outputLayersInfo, NvDsInferNetworkInfo const& networkInfo,
+    NvDsInferParseDetectionParams const& detectionParams, std::vector<NvDsInferParseObjectInfo>& objectList)
+{
+  return NvDsInferParseCustomYoloLPD(outputLayersInfo, networkInfo, detectionParams, objectList);
 }
 
 extern "C" bool

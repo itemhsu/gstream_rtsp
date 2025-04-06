@@ -1,91 +1,23 @@
-################################################################################
-# Copyright (c) 2018-2023, NVIDIA CORPORATION. All rights reserved.
-#
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-# DEALINGS IN THE SOFTWARE.
-#
-# Edited by Marcos Luciano
-# https://www.github.com/marcoslucianops
-################################################################################
+DEEPSTREAM_INC=/opt/nvidia/deepstream/deepstream-7.1/sources/includes
+CXX=g++
+CXXFLAGS=-g -Wall -Wno-unused-function $(shell pkg-config --cflags gstreamer-1.0 glib-2.0) -I$(DEEPSTREAM_INC)
+LDFLAGS=$(shell pkg-config --libs gstreamer-1.0 glib-2.0) -L/opt/nvidia/deepstream/deepstream-7.1/lib/ -lnvds_meta -lnvdsgst_meta -lopencv_core -lopencv_imgcodecs
 
-CUDA_VER?=
-ifeq ($(CUDA_VER),)
-	$(error "CUDA_VER is not set")
-endif
+NVDS_CUSTOM_DIR=nvdsinfer_custom_impl_Yolo
 
-OPENCV?=
-ifeq ($(OPENCV),)
-	OPENCV=0
-endif
+TARGETS=yolov10_crop yolov10_rtsp_crop cmd_rtsp_crop
 
-GRAPH?=
-ifeq ($(GRAPH),)
-	GRAPH=0
-endif
+.PHONY: all clean subdir
 
-CC:= g++
-NVCC:=/usr/local/cuda-$(CUDA_VER)/bin/nvcc
+all: subdir $(TARGETS)
 
-CFLAGS:= -Wall -std=c++11 -shared -fPIC -Wno-error=deprecated-declarations
-CFLAGS+= -I/opt/nvidia/deepstream/deepstream/sources/includes -I/usr/local/cuda-$(CUDA_VER)/include
+subdir:
+	$(MAKE) -C $(NVDS_CUSTOM_DIR)
 
-ifeq ($(OPENCV), 1)
-	COMMON+= -DOPENCV
-	CFLAGS+= $(shell pkg-config --cflags opencv4 2> /dev/null || pkg-config --cflags opencv)
-	LIBS+= $(shell pkg-config --libs opencv4 2> /dev/null || pkg-config --libs opencv)
-endif
-
-ifeq ($(GRAPH), 1)
-	COMMON+= -DGRAPH
-endif
-
-CUFLAGS:= -I/opt/nvidia/deepstream/deepstream/sources/includes -I/usr/local/cuda-$(CUDA_VER)/include
-
-LIBS+= -lnvinfer_plugin -lnvinfer -lnvonnxparser -L/usr/local/cuda-$(CUDA_VER)/lib64 -lcudart -lcublas -lstdc++fs
-LFLAGS:= -shared -Wl,--start-group $(LIBS) -Wl,--end-group
-
-INCS:= $(wildcard *.h)
-
-SRCFILES:= $(filter-out calibrator.cpp, $(wildcard *.cpp))
-
-ifeq ($(OPENCV), 1)
-	SRCFILES+= calibrator.cpp
-endif
-
-SRCFILES+= $(wildcard layers/*.cpp)
-SRCFILES+= $(wildcard *.cu)
-
-TARGET_LIB:= libnvdsinfer_custom_impl_Yolo.so
-
-TARGET_OBJS:= $(SRCFILES:.cpp=.o)
-TARGET_OBJS:= $(TARGET_OBJS:.cu=.o)
-
-all: $(TARGET_LIB)
-
-%.o: %.cpp $(INCS) Makefile
-	$(CC) -c $(COMMON) -o $@ $(CFLAGS) $<
-
-%.o: %.cu $(INCS) Makefile
-	$(NVCC) -c -o $@ --compiler-options '-fPIC' $(CUFLAGS) $<
-
-$(TARGET_LIB) : $(TARGET_OBJS)
-	$(CC) -o $@  $(TARGET_OBJS) $(LFLAGS)
+%: %.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
 clean:
-	rm -rf $(TARGET_LIB)
-	rm -rf $(TARGET_OBJS)
+	$(MAKE) -C $(NVDS_CUSTOM_DIR) clean
+	rm -f $(TARGETS)
+

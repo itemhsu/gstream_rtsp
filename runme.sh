@@ -22,6 +22,9 @@ source ./.bashrc
 #C++ crop rtsp
 ./yolov10_rtsp_crop "rtsp://168.168.11.23/media.amp?streamprofile=Profile1"
 
+#C++ cmd crop rtsp
+./cmd_rtsp_crop "rtsp://168.168.11.23/media.amp?streamprofile=Profile1" "config_infer_primary_yoloV10.txt"
+
 
 
 # yolo rtsp 
