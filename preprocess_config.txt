@@ -1,0 +1,33 @@
+[property]
+enable=1
+target-unique-ids=1
+    # 0=NCHW, 1=NHWC, 2=CUSTOM
+network-input-order=0
+process-on-frame=1
+    # if enabled maintain the aspect ratio while scaling
+maintain-aspect-ratio=1
+    # if enabled pad symmetrically with maintain-aspect-ratio enabled
+symmetric-padding=1
+    # processing width/height at which image scaled
+processing-width=288
+processing-height=288
+scaling-buf-pool-size=6
+tensor-buf-pool-size=6
+    # tensor shape based on network-input-order
+network-input-shape=8;3;288;288
+    # 0=RGB, 1=BGR, 2=GRAY
+network-color-format=0
+    # 0=FP32, 1=UINT8, 2=INT8, 3=UINT32, 4=INT32, 5=FP16
+tensor-data-type=0
+tensor-name=input_1:0
+    # 0=NVBUF_MEM_DEFAULT 1=NVBUF_MEM_CUDA_PINNED 2=NVBUF_MEM_CUDA_DEVICE 3=NVBUF_MEM_CUDA_UNIFIED
+scaling-pool-memory-type=0
+    # 0=NvBufSurfTransformCompute_Default 1=NvBufSurfTransformCompute_GPU 2=NvBufSurfTransformCompute_VIC
+scaling-pool-compute-hw=0
+    # Scaling Interpolation method
+scaling-filter=0
+custom-lib-path=/opt/nvidia/deepstream/deepstream/lib/gst-plugins/libcustom2d_preprocess.so
+custom-tensor-preparation-function=CustomTensorPreparation
+
+[user-configs]
+pixel-normalization-factor=0.003921568
